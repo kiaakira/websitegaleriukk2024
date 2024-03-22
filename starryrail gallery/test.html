@@ -1,0 +1,20 @@
+<?php
+include "../koneksi.php";
+
+$tgl_awal = @$_GET['tanggal_awal']; // Ambil data tgl_awal sesuai input (kalau tidak ada set kosong)
+$tgl_akhir = @$_GET['tanggal_akhir']; // Ambil data tgl_awal sesuai input (kalau tidak ada set kosong)
+
+if(empty($tgl_awal) or empty($tgl_akhir)){ // Cek jika tgl_awal atau tgl_akhir kosong, maka :
+    // Buat query untuk menampilkan semua data transaksi
+    $query = "SELECT * FROM daftar_tamu WHERE status = 'verified' ORDER BY id ASC";
+    $url_cetak = "cetak_data.php";
+    $label = "Semua Data Transaksi";
+} else { // Jika terisi
+    // Buat query untuk menampilkan data transaksi sesuai periode tanggal
+    $query = "SELECT * FROM daftar_tamu WHERE (tanggalkunjungan BETWEEN '".$tgl_awal."' AND '".$tgl_akhir."') and status = 'verified' ORDER BY id ASC";
+    $url_cetak = "cetak_data.php?tanggal_awal=".$tgl_awal."&tanggal_akhir=".$tgl_akhir."&filter=true";
+    $tgl_awal = date('d-m-Y', strtotime($tgl_awal)); 
+    $tgl_akhir = date('d-m-Y', strtotime($tgl_akhir)); 
+    $label = 'Periode Tanggal '.$tgl_awal.' s/d '.$tgl_akhir;
+}
+?>
